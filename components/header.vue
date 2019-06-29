@@ -16,13 +16,14 @@
       </el-row>
       <!-- 用户信息 -->
       <el-row type="flex" align="middle">
-        <el-dropdown v-if="false">
+        <!-- 如果用户存在则展示用户信息，用户数据来自store -->
+        <el-dropdown v-if="$store.state.user.userInfo.token">
           <el-row type="flex" align="middle" class="el-dropdown-link">
             <nuxt-link to="#">
-              <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt>
-              用户名
+              <img :src="$axios.defaults.baseURL + $store.state.user.userInfo.user.defaultAvatar">
+              {{$store.state.user.userInfo.user.nickname}}
             </nuxt-link>
-            <i class="el-icon-arrow-down el-icon--right"></i>
+            <i class="el-icon-caret-bottom el-icon--right"></i>
           </el-row>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>
@@ -41,10 +42,18 @@
 
 <script>
 export default {
-    methods: {
-        // 用户退出
-        handleLogout(){},
+  methods: {
+    // 用户退出
+    handleLogout() {
+      const { commit } = this.$store;
+      commit("user/cleanUserInfo");
+
+      this.$message({
+        message: "退出成功",
+        type: "success"
+      });
     }
+  }
 };
 </script>
 
